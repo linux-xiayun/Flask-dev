@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add</title>
+</head>
+<body>
+    <h1>Add Two Number</h1>
+    <p>
+        <input type="text" size="5" name="a"> +
+        <input type="text" size="5" name="b"> =
+        <span id="result">?</span>
+    </p>
+    <button id="calculate">Calculate!</button>
+<script type=text/javascript>
+  $(function() {
+    $('a#calculate').bind('click', function() {
+      $.getJSON($SCRIPT_ROOT + '/calculate', {
+        a: $('input[name="a"]').val(),
+        b: $('input[name="b"]').val()
+      }, function(data) {
+        $("#result").text(data.result);
+      });
+      return false;
+    });
+  });
+</script>
+</body>
+</html>
