@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import os
-from flask import Flask, request, url_for, send_from_directory
+from flask import Flask, request, url_for, send_from_directory, render_template
 from werkzeug import secure_filename
 
 #设置上传文件允许的文件扩展名
@@ -34,11 +34,16 @@ def upload_file():
     if request.method == 'POST':
         file = request.files['file']
         if file and allowed_file(file.filename):
+            '''
+            ecure_filename仅返回ASCII字符
+            非ASCII（比如汉字）会被过滤掉
+            空格会被替换为下划线
+            '''
             filename = secure_filename(file.filename) #检查获取文件名
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            file_url = url_for('uploaded_file', filename=filename)
-            return html + '<br><img src=' + file_url + '>'
-    return html
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename)) #保存文件至后台
+            file_url = url_for('uploaded_file', filename=filename) #获取上传文件的url
+            # return html + '<br><img src=' + file_url + '>' #展示图片：图片地址为/upload/<filename>，实际地址为os.path.join(app.config['UPLOAD_FOLDER'], filename)
+    return render_template('file.html', file_url=file_url)
 
 if __name__ == '__main__':
     app.run(
